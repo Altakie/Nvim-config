@@ -68,8 +68,19 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- [[ File Types ]]
+vim.filetype.add {
+  extension = {
+    mdx = 'mdx',
+  },
+}
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- Allow separate yanking to system clipboard
+vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set('n', '<leader>yy', '"+yy')
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -733,6 +744,8 @@ require('lazy').setup({
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+      -- tell treesitter to use the markdown parser for mdx files
+      vim.treesitter.language.register('markdown', 'mdx')
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -741,6 +754,10 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+  {
+    'tpope/vim-fugitive',
+    opts = {},
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
