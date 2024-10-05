@@ -79,7 +79,7 @@ vim.filetype.add {
 --  See `:help vim.keymap.set()`
 
 -- Allow separate yanking to system clipboard
-vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>yy', '"+yy')
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
@@ -775,6 +775,13 @@ require('lazy').setup({
     },
   },
   {
+    'olrtg/nvim-emmet',
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
+    end,
+  },
+  { 'mattn/emmet-vim' },
+  {
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
     event = 'VeryLazy',
@@ -782,6 +789,22 @@ require('lazy').setup({
       require('nvim-surround').setup {
         -- Configuration here, or leave empty to use defaults
       }
+    end,
+  },
+  {
+    'AlexanderHOtt/keyquest.nvim',
+    opts = {
+      quests = {
+        { mode = 'n', keymap = 'K', amount_goal = 20, amount_curr = 0 },
+        { mode = 'n', keymap = 'ys', amount_goal = 20, amount_curr = 0 },
+        { mode = 'n', keymap = '}', amount_goal = 20, amount_curr = 0 },
+      },
+    },
+    config = function(_, opts)
+      local keyquest = require 'keyquest'
+      keyquest.setup(opts)
+      keyquest.toggle() -- open by default
+      vim.keymap.set('n', '<leader>kq', keyquest.toggle)
     end,
   },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
