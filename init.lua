@@ -79,7 +79,7 @@ vim.filetype.add {
 --  See `:help vim.keymap.set()`
 
 -- Allow separate yanking to system clipboard
-vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>yy', '"+yy')
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
@@ -465,7 +465,8 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {},
-        pyright = {},
+        -- pyright = {},
+        markdownlint = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
