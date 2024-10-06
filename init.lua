@@ -205,13 +205,6 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
     end,
   },
 
@@ -465,8 +458,16 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {},
+<<<<<<< HEAD
         -- pyright = {},
         markdownlint = {},
+=======
+        pyright = {},
+        markdownlint = {},
+        html = {},
+        htmx = {},
+        cssls = {},
+>>>>>>> 2549fe2392dd587b94a4f8d9278a6ff0f4d940e1
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -728,7 +729,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'css', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'go' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -758,9 +759,59 @@ require('lazy').setup({
   },
   {
     'tpope/vim-fugitive',
-    opts = {},
+    config = function() end,
   },
-
+  -- Html Plugins
+  {
+    'windwp/nvim-ts-autotag',
+    opts = {
+      -- Defaults
+      enable_close = true, -- Auto close tags
+      enable_rename = true, -- Auto rename pairs of tags
+      enable_close_on_slash = false, -- Auto close on trailing </
+    },
+    -- Also override individual filetype configs, these take priority.
+    -- Empty by default, useful if one of the "opts" global settings
+    -- doesn't work well in a specific filetype
+    per_filetype = {
+      ['html'] = {
+        enable_close = false,
+      },
+    },
+  },
+  {
+    'olrtg/nvim-emmet',
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
+    end,
+  },
+  { 'mattn/emmet-vim' },
+  {
+    'kylechui/nvim-surround',
+    version = '*', -- Use for stability; omit to use `main` branch for the latest features
+    event = 'VeryLazy',
+    config = function()
+      require('nvim-surround').setup {
+        -- Configuration here, or leave empty to use defaults
+      }
+    end,
+  },
+  {
+    'AlexanderHOtt/keyquest.nvim',
+    opts = {
+      quests = {
+        { mode = 'n', keymap = 'K', amount_goal = 20, amount_curr = 0 },
+        { mode = 'n', keymap = 'ys', amount_goal = 20, amount_curr = 0 },
+        { mode = 'n', keymap = '}', amount_goal = 20, amount_curr = 0 },
+      },
+    },
+    config = function(_, opts)
+      local keyquest = require 'keyquest'
+      keyquest.setup(opts)
+      keyquest.toggle() -- open by default
+      vim.keymap.set('n', '<leader>kq', keyquest.toggle)
+    end,
+  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
