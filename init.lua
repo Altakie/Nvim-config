@@ -75,6 +75,10 @@ vim.filetype.add {
   },
 }
 
+-- NOTE: Folding has been added - Maybe use nvim ufa
+vim.o.foldmethod = 'indent'
+vim.o.foldlevel = 999
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -366,6 +370,7 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -458,17 +463,27 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {},
-<<<<<<< HEAD
-        -- pyright = {},
-        markdownlint = {},
-=======
         pyright = {},
         markdownlint = {},
         html = {},
         htmx = {},
         cssls = {},
->>>>>>> 2549fe2392dd587b94a4f8d9278a6ff0f4d940e1
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              -- Other Settings ...
+              procMacro = {
+                ignored = {
+                  leptos_macro = {
+                    -- optional: --
+                    -- 'component',
+                    'server',
+                  },
+                },
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -522,6 +537,7 @@ require('lazy').setup({
           end,
         },
       }
+      require('lspconfig').racket_langserver.setup {}
     end,
   },
 
@@ -762,23 +778,23 @@ require('lazy').setup({
     config = function() end,
   },
   -- Html Plugins
-  {
-    'windwp/nvim-ts-autotag',
-    opts = {
-      -- Defaults
-      enable_close = true, -- Auto close tags
-      enable_rename = true, -- Auto rename pairs of tags
-      enable_close_on_slash = false, -- Auto close on trailing </
-    },
-    -- Also override individual filetype configs, these take priority.
-    -- Empty by default, useful if one of the "opts" global settings
-    -- doesn't work well in a specific filetype
-    per_filetype = {
-      ['html'] = {
-        enable_close = false,
-      },
-    },
-  },
+  -- {
+  --   'windwp/nvim-ts-autotag',
+  --   opts = {
+  --     -- Defaults
+  --     enable_close = true, -- Auto close tags
+  --     enable_rename = true, -- Auto rename pairs of tags
+  --     enable_close_on_slash = false, -- Auto close on trailing </
+  --   },
+  --   -- Also override individual filetype configs, these take priority.
+  --   -- Empty by default, useful if one of the "opts" global settings
+  --   -- doesn't work well in a specific filetype
+  --   per_filetype = {
+  --     ['html'] = {
+  --       enable_close = false,
+  --     },
+  --   },
+  -- },
   {
     'olrtg/nvim-emmet',
     config = function()
@@ -812,6 +828,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>kq', keyquest.toggle)
     end,
   },
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -825,10 +842,7 @@ require('lazy').setup({
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
 
-  require 'custom.plugins.filetree',
   require 'custom.plugins.autopairs',
-
-  vim.keymap.set('n', '<C-b>', '<Cmd>Neotree toggle<CR>'), -- Keymap for filetree
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
